@@ -1,0 +1,26 @@
+{
+  "name": "iss_server",
+  "version": "1.0.0",
+  "description": "Get telnet data of vantage pro 2 via telnet",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "telnet",
+    "socket.io",
+    "vantage-pro"
+  ],
+  "author": "Trickfilm400",
+  "license": "ISC",
+  "dependencies": {
+    "extends-classes": "^1.0.5",
+    "mysql": "^2.18.1",
+    "socket.io": "^2.3.0",
+    "telnet-client": "^1.2.11"
+  }
+}
