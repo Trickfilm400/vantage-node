@@ -1,6 +1,6 @@
 {
-  "name": "iss_server",
-  "version": "1.0.0",
+  "name": "vantage-node",
+  "version": "1.0.1",
   "description": "Get telnet data of vantage pro 2 via telnet",
   "main": "index.js",
   "scripts": {
