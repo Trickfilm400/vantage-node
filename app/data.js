@@ -12,7 +12,7 @@ class Data extends Many(DB,IO) {
 		this.init();
 		this.max_elements = 32;
 		this.conf_short_arr = true;
-		this.conf_write_db = conf.db_enabled || true;
+		this.conf_write_db = false || conf.db_enabled;
 	}
 	init () {
 		this.dataarray =  {
