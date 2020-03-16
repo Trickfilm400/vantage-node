@@ -3,6 +3,7 @@ const core = require('../core/core.js');
 const DB = require('../core/db.js');
 const IO = require('./socket.js');
 const Many = require('extends-classes');
+const conf = require('../config.json');
 class Data extends Many(DB,IO) {
 	constructor() {
 		super();
@@ -11,7 +12,7 @@ class Data extends Many(DB,IO) {
 		this.init();
 		this.max_elements = 32;
 		this.conf_short_arr = true;
-		this.conf_write_db = true;
+		this.conf_write_db = conf.db_enabled || true;
 	}
 	init () {
 		this.dataarray =  {

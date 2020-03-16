@@ -1,14 +1,19 @@
 let Telnet = require('telnet-client');
 const parse = require('./core.js').parse;
 const Data = require('../app/data.js');
+const config = require('../config.json');
 class weather_station {
-	constructor(host, port=22222) {
+	/**
+	 * @param {String} host - IP Address
+	 * @param {Number || String} port - TCP port for Telnet
+	 */
+	constructor(host, port=config["vantage-port"] || 22222) {
 		this.c = new Telnet();
 		//this.connected = null;
 		this.firstpackage = -1;
 		this.params = {
 			host: host,
-			port: port,
+			port: parseInt(port),
 			negotiationMandatory: false,
 			timeout: 2500
 		};
@@ -81,7 +86,7 @@ class weather_station {
 	}
 }
 
-let t = new weather_station("192.168.178.25");
+let t = new weather_station(config["vantage-url"]);
 t.connect();
 
 

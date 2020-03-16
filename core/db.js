@@ -1,16 +1,11 @@
 const mysql = require('mysql');
-
+const conf = require('../config.json');
 class DB {
 	constructor() {
-		this.conn = mysql.createConnection({
-			host: "192.168.2.52"/*bigdb*/,
-			user: "weather",
-			password: "ooxFP87YMxDtUcR8Ldf5",
-			database: "weather"
-		});
+		if (conf.db_enabled) this.conn = mysql.createConnection(conf.db);
 	}
 	DB_connect() {
-		this.conn.connect();
+		if (conf.db_enabled) this.conn.connect();
 	}
 	DB_insert(json) {
 		this.conn.query('INSERT INTO log (`time`, `station_id`, `barometer`, `in_temp`, `in_hum`, `out_temp`, `out_hum`, `wind_speed`, `max_win_speed`, `wind_dir`, `dayrain`, `rainrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', [
