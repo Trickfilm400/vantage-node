@@ -29,23 +29,16 @@ function parser (buffer) {
 	 * Checks if the buffer is a loop and also the first one
 	 * @return {Boolean}
 	 */
-	/*let isFirstLoop = function() {
-		return buffer.length === 100 && buffer.toString('utf8', 1, 4) === 'LOO';
-	};*/
 	let isFirstLoop = buffer.length === 100 && buffer.toString('utf8', 1, 4) === 'LOO';
 
 	/**
 	 * Checks if the buffer is a loop
 	 * @return {Boolean}
 	 */
-	/*let isLoop = function() {
-		return isFirstLoop(buffer) || buffer.length === 99 && buffer.toString('utf8', 0, 3) === 'LOO';
-	};*/
 	let isLoop = isFirstLoop || buffer.length === 99 && buffer.toString('utf8', 0, 3) === 'LOO';
 	if (isLoop) {
 		let m = isFirstLoop ? 1 : 0;
 		let dat = {
-			//barometer:      buffer.readUInt16LE(7+m) / 1000,
 			barometer:      (((buffer.readUInt16LE(7+m) *25.399999705)/1000)/0.75),
 			intemp:  (((buffer.readUInt16LE(9+m) / 10) - 32) * 5/9 ),
 			inhum:     buffer.readInt8(11+m),
