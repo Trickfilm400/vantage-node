@@ -3,6 +3,7 @@ Get Data from Vantage Pro Weatherstation from Davis Instruments via telnet conne
 
 
 # Installation
+* Copy `config.example.json` to `config.json`
 * Create a MySQL / MariaDB Database and Table
 * Table Command below (NOTICE the quotation marks!):
 
