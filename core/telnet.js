@@ -79,6 +79,8 @@ class weather_station {
 	}
 	end(cb) {
 		console.log("[INFO] Attempting to close telnet connection...");
+		console.log("[INFO] Attempting to close database connection...");
+		Data.closeDB();
 		this.c.end().then(_ => {
 			console.log("[INFO] telnet Connection closed");
 			cb();
