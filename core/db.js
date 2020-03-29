@@ -27,6 +27,10 @@ class DB {
 			//console.log(results);
 		});
 	}
+	closeMysql() {
+		this.conn.end();
+		console.log("[INFO] Closed Mysql connection.");
+	}
 }
 
 module.exports = DB;
