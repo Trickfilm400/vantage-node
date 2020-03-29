@@ -1,0 +1,13 @@
+{
+	"vantage-url": "192.168.178.1",
+	"vantage-port": 1234,
+	"db_enabled": true,
+	"db": {
+		"host": "192.168.1.1",
+		"user": "dbuser",
+		"password": "dbpasswd",
+		"database": "dbname"
+	},
+	"database_save_interval": 60,
+	"socket_server_port": 3010
+}
