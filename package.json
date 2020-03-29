@@ -1,6 +1,6 @@
 {
   "name": "vantage-node",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Get telnet data of vantage pro 2 via telnet",
   "main": "index.js",
   "scripts": {
