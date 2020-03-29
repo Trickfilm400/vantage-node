@@ -52,9 +52,6 @@ class Data extends Many(DB,IO) {
 			}
 		}
 	}
-	/*clear_data() {
-		this.init();
-	}*/
 	get_one_min() {
 		let data = {};
 		for (let key in this.dataarray) {
@@ -73,7 +70,9 @@ class Data extends Many(DB,IO) {
 		//console.log(data);
 		if (this.conf_write_db) this.DB_insert(data);
 	}
+	closeDB() {
+		this.closeMysql();
+	}
 }
-let z = new Data();
 
-module.exports = z;
+module.exports = new Data();
