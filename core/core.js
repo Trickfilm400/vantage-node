@@ -46,7 +46,7 @@ function parser (buffer) {
 			windspeed:      (buffer.readInt8(14+m) * 1.6),
 			winddir:  buffer.readUInt16LE(16+m),
 			outhum:    buffer.readInt8(33+m),
-			dayrain:        buffer.readUInt16LE(50+m),
+			dayrain:        buffer.readUInt16LE(50+m)*0.2,
 			rainrate:       buffer.readUInt16LE(41+m)*0.2
 			//uvindex:		buffer.readUInt16LE(43+m)
 			//crc:            buffer.readUInt16LE(97+m)
