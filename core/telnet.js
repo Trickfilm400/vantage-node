@@ -56,7 +56,22 @@ class weather_station {
 		this.c.on('error', function (e) {
 			//this.connected = false;
 			self.firstpackage = -1;
-			console.log("[TELNET-ERROR] " + e)
+			self.connected = false;
+			log("[TELNET-ERROR] " + e)
+			self.c.connect(self.params).then(() => {
+				log("[WARN] " + new Date() + " - Reconnecting Telnet cause of connection error");
+				//sending trigger string
+				self.c.send("LOOP -1").then(_ => {
+					log("[DATA] Data after connection error");
+				}).catch(_ => {
+					log("[ERROR] - on error while reconnecting: " + _);
+					self.firstpackage = -2;
+				});
+				self.connected = true;
+				self.firstpackage = -1;
+			}).catch(e => {
+				log("Error connection after Timeout!" + e);
+			})
 		});
 		//on connection establishments
 		this.c.on('connect', function () {
