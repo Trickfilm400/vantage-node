@@ -1,10 +1,10 @@
 {
   "name": "vantage-node",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Get telnet data of vantage pro 2 via telnet",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,6 @@
     "extends-classes": "^1.0.5",
     "mysql": "^2.18.1",
     "socket.io": "^2.3.0",
-    "telnet-client": "^1.2.11"
+    "telnet-client": "^1.4.4"
   }
 }
