@@ -1,4 +1,4 @@
-let round = r => {return (Math.round((r+Number.EPSILON) * 100) / 100)};
+let round = r => (Math.round((r+Number.EPSILON) * 100) / 100);
 const core = require('../core/core.js');
 const DB = require('../core/db.js');
 const IO = require('./socket.js');
