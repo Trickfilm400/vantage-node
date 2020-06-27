@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const conf = require('../config.json');
+log = string => console.log(Date() + " => " + string);
 class DB {
 	constructor() {
 		if (conf.db_enabled) this.conn = mysql.createConnection(conf.db);
@@ -23,13 +24,13 @@ class DB {
 			json.rainrate
 		],  function (error) {
 			if (error) throw error;
-			else console.log("[INFO] Insertet new MySQL from MysSQL class");
+			else log("[INFO] Insertet new MySQL from MysSQL class");
 			//console.log(results);
 		});
 	}
 	closeMysql() {
 		this.conn.end();
-		console.log("[INFO] Closed Mysql connection.");
+		log("[INFO] Closed Mysql connection.");
 	}
 }
 

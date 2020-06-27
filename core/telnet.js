@@ -2,6 +2,7 @@ let Telnet = require('telnet-client');
 const parse = require('./core.js').parse;
 const Data = require('../app/data.js');
 const config = require('../config.json');
+log = string => console.log(Date() + " => " + string);
 class weather_station {
 	/**
 	 * @param {String} host - IP Address
@@ -24,32 +25,32 @@ class weather_station {
 			self.connected = false;
 			//try to connect again
 			self.c.connect(self.params).then(_ => {
-				console.log("[WARN] " + new Date() + " - Reconnecting Telnet cause of connection timeout");
+				log("[WARN] " + new Date() + " - Reconnecting Telnet cause of connection timeout");
 				//sending trigger string
 				self.c.send("LOOP -1").then(_ => {
-					console.log("[DATA] Data after timeout");
+					log("[DATA] Data after timeout");
 				}).catch(_ => {
-					console.log("[ERROR] - on timeout: " + _);
+					log("[ERROR] - on timeout: " + _);
 					self.firstpackage = -2;
 				});
 				self.connected = true;
 				self.firstpackage = -1;
 			}).catch(e => {
-				console.log("Error connection after Timeout!" + e);
+				log("Error connection after Timeout!" + e);
 			});
-			//console.log('[ERR] Telnet Connection timeout');
+			//log('[ERR] Telnet Connection timeout');
 		});
 		//receive data
 		this.c.on('data', function(d) {
 			//d => buffer
-			//console.log(parse(d));
+			//log(parse(d));
 			self.firstpackage++;
 			if(self.firstpackage > 1 && self.connected === true) Data.add_data(parse(d));
 		});
 		//connection closing at end of program
 		this.c.on('close', function() {
 			this.connected = false;
-			console.log('[INFO] telnet connection closed successfully');
+			log('[INFO] telnet connection closed successfully');
 		});
 		//receiving errors
 		this.c.on('error', function (e) {
@@ -60,7 +61,7 @@ class weather_station {
 		//on connection establishments
 		this.c.on('connect', function () {
 			self.firstpackage = -1;
-			console.log("[INFO] Telnet connection connected");
+			log("[INFO] Telnet connection connected");
 			//connection.end()
 		});
 	}
@@ -69,20 +70,20 @@ class weather_station {
 		this.c.connect(this.params).then(_ => {
 			self.firstpackage = -1;
 			self.c.send("LOOP -1").then(_ => {
-				console.log("[DATA] Got Data connected function");
+				log("[DATA] Got Data connected function");
 			}).catch(_ => {
-				console.log("[ERROR] on connect: " + _);
+				log("[ERROR] on connect: " + _);
 				self.firstpackage = -2;
 			});
 			self.connected = true;
 		});
 	}
 	end(cb) {
-		console.log("[INFO] Attempting to close telnet connection...");
-		console.log("[INFO] Attempting to close database connection...");
+		log("[INFO] Attempting to close telnet connection...");
+		log("[INFO] Attempting to close database connection...");
 		Data.closeDB();
 		this.c.end().then(_ => {
-			console.log("[INFO] telnet Connection closed");
+			log("[INFO] telnet Connection closed");
 			cb();
 		});
 	}
