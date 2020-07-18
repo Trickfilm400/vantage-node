@@ -11,6 +11,7 @@ class weather_station {
 	constructor(host, port=config["vantage-port"] || 22222) {
 		this.c = new Telnet();
 		//this.connected = null;
+		this.end_telnet_conenction_manually = false;
 		this.firstpackage = -1;
 		this.params = {
 			host: host,
@@ -41,16 +42,35 @@ class weather_station {
 			//log('[ERR] Telnet Connection timeout');
 		});
 		//receive data
-		this.c.on('data', function(d) {
+		this.c.on('data', d => {
 			//d => buffer
 			//log(parse(d));
-			self.firstpackage++;
-			if(self.firstpackage > 1 && self.connected === true) Data.add_data(parse(d));
+			this.firstpackage++;
+			if(this.firstpackage > 1 && this.connected === true) Data.add_data(parse(d));
 		});
 		//connection closing at end of program
-		this.c.on('close', function() {
-			this.connected = false;
-			log('[INFO] telnet connection closed successfully');
+		this.c.on('close', () => {
+			log("[INFO] received close event");
+			if (this.end_telnet_conenction_manually === true) {
+				this.connected = false;
+				log('[INFO] telnet connection closed successfully');
+			} else {
+				//reconnect telnet connection
+				this.c.connect(this.params).then(() => {
+					log("[WARN] " + new Date() + " - Reconnecting Telnet cause of connection closing");
+					//sending trigger string
+					self.c.send("LOOP -1").then(_ => {
+						log("[DATA] Data after closed connection");
+					}).catch(_ => {
+						log("[ERROR] - on close-reconnect: " + _);
+						self.firstpackage = -2;
+					});
+					self.connected = true;
+					self.firstpackage = -1;
+				}).catch(e => {
+					log("Error connection after closed connection!" + e);
+				});
+			}
 		});
 		//receiving errors
 		this.c.on('error', function (e) {
@@ -97,6 +117,7 @@ class weather_station {
 		log("[INFO] Attempting to close telnet connection...");
 		log("[INFO] Attempting to close database connection...");
 		Data.closeDB();
+		this.end_telnet_conenction_manually = true;
 		this.c.end().then(_ => {
 			log("[INFO] telnet Connection closed");
 			cb();
