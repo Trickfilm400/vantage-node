@@ -39,15 +39,15 @@ function parser (buffer) {
 	if (isLoop) {
 		let m = isFirstLoop ? 1 : 0;
 		let dat = {
-			barometer:      (((buffer.readUInt16LE(7+m) *25.399999705)/1000)/0.75),
-			intemp:  (((buffer.readUInt16LE(9+m) / 10) - 32) * 5/9 ),
-			inhum:     buffer.readInt8(11+m),
-			outtemp: (((buffer.readUInt16LE(12+m) / 10) -32 ) * 5/9),
-			windspeed:      (buffer.readInt8(14+m) * 1.6),
-			winddir:  buffer.readUInt16LE(16+m),
-			outhum:    buffer.readInt8(33+m),
-			dayrain:        buffer.readUInt16LE(50+m)*0.2,
-			rainrate:       buffer.readUInt16LE(41+m)*0.2
+			barometer:  (((buffer.readUInt16LE(7+m) *25.399999705)/1000)/0.75),
+			intemp:     (((buffer.readUInt16LE(9+m) / 10) - 32) * 5/9 ),
+			inhum:      buffer.readInt8(11+m),
+			outtemp:    (((buffer.readUInt16LE(12+m) / 10) -32 ) * 5/9),
+			windspeed:  (buffer.readInt8(14+m) * 1.6),
+			winddir:    buffer.readUInt16LE(16+m),
+			outhum:     buffer.readInt8(33+m),
+			dayrain:    buffer.readUInt16LE(50+m)*0.2,
+			rainrate:   (buffer.readUInt16LE(41+m)*0.01)*25.4
 			//uvindex:		buffer.readUInt16LE(43+m)
 			//crc:            buffer.readUInt16LE(97+m)
 		};
