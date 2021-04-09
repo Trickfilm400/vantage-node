@@ -2,9 +2,12 @@
   "name": "vantage-node",
   "version": "1.3.0",
   "description": "Get telnet data of vantage pro 2 via telnet",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "ts-node-dev --respawn --no-deps --rs --cls ./src/index.ts",
+    "test": "mocha -r ts-node/register test/*.ts",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -13,14 +16,32 @@
   "keywords": [
     "telnet",
     "socket.io",
-    "vantage-pro"
+    "vantage-pro",
+    "typescript"
   ],
   "author": "Trickfilm400",
   "license": "ISC",
   "dependencies": {
+    "convict": "^6.0.1",
     "extends-classes": "^1.0.5",
     "mysql": "^2.18.1",
     "socket.io": "^2.3.0",
-    "telnet-client": "^1.4.6"
+    "telnet-client": "^1.4.9"
+  },
+  "devDependencies": {
+    "@types/convict": "^6.0.1",
+    "@types/mocha": "^8.2.2",
+    "@types/mysql": "^2.15.18",
+    "@types/node": "^14.14.6",
+    "@types/socket.io": "^2.1.13",
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
+    "@typescript-eslint/parser": "^4.6.1",
+    "eslint": "^7.13.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "mocha": "^8.3.0",
+    "prettier": "^2.1.2",
+    "ts-node": "^9.0.0",
+    "ts-node-dev": "^1.0.0",
+    "typescript": "^4.0.5"
   }
 }
