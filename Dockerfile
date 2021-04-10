@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY dist/ .
 COPY package.json .
-COPY static/ .
+COPY static/ /static
 COPY package-lock.json .
 RUN npm ci
 
