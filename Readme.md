@@ -11,7 +11,7 @@ Get Data from Vantage Pro Weatherstation from Davis Instruments via telnet conne
 * **Start Programm** with `nodejs index.js` or `node .`
 
 ### Docker Image
-* Download Docker image from docker Hub (link here)
+* Download Docker image from [Docker Hub](https://hub.docker.com/r/n404/vantage-node) (`n404/vantage-node`)
 * run `docker run -p 3010:3010 --name vantage-node -e VANTAGE_URL=123.123.123.123 -e MYSQL_ENABLED=false n404/vantage-node`
  
 **The Table on the MYSQL Database will be automatically generated if it is not existed**
