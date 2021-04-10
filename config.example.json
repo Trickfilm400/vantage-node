@@ -1,13 +1,17 @@
 {
-	"vantage-url": "192.168.178.1",
-	"vantage-port": 1234,
-	"db_enabled": true,
-	"db": {
-		"host": "192.168.1.1",
-		"user": "dbuser",
-		"password": "dbpasswd",
-		"database": "dbname"
+	"vantage": {
+		"url": "192.168.178.12"
 	},
-	"database_save_interval": 60,
-	"socket_server_port": 3010
+	"mysql": {
+		"enabled": true,
+		"ip": "192.168.2.13",
+		"database": "databaseName",
+		"username": "dbUser",
+		"password": "dbPassword"
+	},
+	"socket": {
+		"enabled": true,
+		"port": 3011
+	},
+	"saveinterval": 60
 }

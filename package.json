@@ -23,7 +23,6 @@
   "license": "ISC",
   "dependencies": {
     "convict": "^6.0.1",
-    "extends-classes": "^1.0.5",
     "mysql": "^2.18.1",
     "socket.io": "^2.3.0",
     "telnet-client": "^1.4.9"
