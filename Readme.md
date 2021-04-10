@@ -69,9 +69,7 @@ The Packages have the following structure:
     "intemp": 22.722222222222225, 
     "outhum": 82, 
     "outtemp": 9.722222222222221, 
-    "rainrate": 0, 
-    "sunrise": 1618029844, 
-    "sunset": 1618078204, 
+    "rainrate": 0,
     "winddir": 258, 
     "windspeed": 0
 }
