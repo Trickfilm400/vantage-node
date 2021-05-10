@@ -19,7 +19,11 @@ export default class SocketIO {
       this.httpServer = http.createServer((req, res) =>
         this.requestHandler(req, res, this)
       );
-      this.io = new Server(this.httpServer);
+      this.io = new Server(this.httpServer, {
+        cors: {
+          origin: '*'
+        },
+      });
       this.io.on('connection', this.onConnectionListener);
       this.httpServer.listen(parseInt(config.get('socket.port')));
       log('<SOCKET> Enabled Socket.IO on port ' + config.get('socket.port'));
