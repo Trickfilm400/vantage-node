@@ -14,6 +14,7 @@ Get Data from Vantage Pro Weatherstation from Davis Instruments via telnet conne
 * Download Docker image from [Docker Hub](https://hub.docker.com/r/n404/vantage-node) (`n404/vantage-node`)
 * run `docker run -p 3010:3010 --name vantage-node -e VANTAGE_URL=123.123.123.123 -e MYSQL_ENABLED=false n404/vantage-node`
  
+* With Custom `config.json` file: `docker run --rm -v $(pwd)/config.json:/config.json -p 3011:3011 n404/vantage-node`
 **The Table on the MYSQL Database will be automatically generated if it is not existed**
 
 # Config
@@ -74,4 +75,58 @@ The Packages have the following structure:
     "windspeed": 0
 }
 ````
+
+### REST API
+`/test` =>
+
+```json
+{
+	"code": 200,
+	"message": "Test successful"
+}
+```
+
+`/healthcheck`(used for internal docker checks):
+
+if healthcheck is ok (HTTP Statuscode: 200):
+
+```json
+{
+    "message": "Packages are valid", 
+    "code": 200, 
+    "value": 1234 // timestamp of last Telnet package in MS
+}
+```
+
+if healthcheck is **not valid**: (HTTP Statuscode: 500)
+
+```json
+{
+    "message": "Packages are outdated and invalid!",
+    "code": 500, 
+    "value": 1234 //timestamp of last Telnet package in MS
+}
+```
+
+`/lastdata`:
+
+Values are `-1` if not set (for example after program restart) (like in `barometer`)
+```json
+{
+  "value": {
+    "barometer": -1,
+    "dayRain": 0,
+    "inHumidity": 29,
+    "outHumidity": 71,
+    "outTemperature": 17.055555555555557,
+    "inTemperature": 22.944444444444443,
+    "rainRate": 0,
+    "windDirection": 147,
+    "windSpeedMax": 0,
+    "windSpeed": 0
+  },
+  "message": "Last Dataset of Weatherstation",
+  "code": 200
+}
+```
 **If your have any problems, fell free to create an issue to contact me**
