@@ -15,6 +15,7 @@ export default class Telnet extends EventEmitter {
   private firstPackage = -1;
   private endTelnetConnectionManually = false;
   public dataEvent;
+  public static lastData = -1;
   constructor() {
     super();
     this.params.negotiationMandatory = false;
@@ -33,6 +34,7 @@ export default class Telnet extends EventEmitter {
   onData(self: this, data: any) {
     self.firstPackage++;
     if (self.firstPackage > 1 && self._connected) {
+      Telnet.lastData = Date.now();
       self.dataEvent.emit('data', data);
     }
   }

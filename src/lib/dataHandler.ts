@@ -26,7 +26,7 @@ export default class DataHandler {
   private lastDataReceived = 0;
   private mysql = new Database();
   private telnet = new Telnet();
-  private socket = new SocketIO();
+  private socket: SocketIO;
   private readonly maxArrayElements = 60;
   private round = (r: number) => Math.round((r + Number.EPSILON) * 100) / 100;
 
@@ -48,6 +48,8 @@ export default class DataHandler {
     let intervalSeconds = config.get('saveinterval') * 1000;
 
     setInterval(this.get_one_min, intervalSeconds, this);
+
+    this.socket = new SocketIO(this);
   }
 
   private parseData(data: any, self: this) {
@@ -100,6 +102,28 @@ export default class DataHandler {
     }
     await self.mysql.insert(data);
   }
+
+  public getLastDataset() {
+    let data = <DataPackage>{};
+    let key: keyof DataArrayPackage;
+    for (key in this.dataArray) {
+      if (this.dataArray.hasOwnProperty(key)) {
+        let arr = this.dataArray[key].slice();
+        if (key === 'windSpeed') {
+          data['windSpeedMax'] = Math.max(...arr);
+        }
+        if (key === 'dayRain') {
+          data[key] = arr[arr.length - 1];
+          continue;
+        }
+        data[key] = this.dataArray[key][this.dataArray[key].length - 1] ?? -1;
+        //data[key] = this.round(sum(arr) / arr.length);
+      }
+    }
+    console.log(data);
+    return data;
+  }
+
   close(): Promise<true> {
     return new Promise((resolve) => {
       this.mysql
