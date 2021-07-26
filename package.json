@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "ts-node-dev --respawn --no-deps --rs --cls ./src/index.ts",
-    "test": "mocha -r ts-node/register test/*.ts",
+    "test": "nyc mocha -r ts-node/register test/*.ts",
     "build": "tsc"
   },
   "repository": {
@@ -37,6 +37,7 @@
     "eslint": "^7.31.0",
     "eslint-plugin-prettier": "^3.4.0",
     "mocha": "^9.0.3",
+    "nyc": "^15.1.0",
     "prettier": "^2.3.2",
     "ts-node": "^10.1.0",
     "ts-node-dev": "^1.1.8",
