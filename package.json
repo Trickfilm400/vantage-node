@@ -4,7 +4,7 @@
   "description": "Get telnet data of vantage pro 2 via telnet",
   "main": "./dist/index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node ./dist/index.js",
     "dev": "ts-node-dev --respawn --no-deps --rs --cls ./src/index.ts",
     "test": "nyc mocha -r ts-node/register test/*.ts",
     "build": "tsc"

@@ -8,7 +8,8 @@ Get Data from Vantage Pro Weatherstation from Davis Instruments via telnet conne
 ### Nodejs Usage
 * Copy `config.example.json` to `config.json` and change your data
 * Create a MySQL / MariaDB Database with user
-* **Start Programm** with `nodejs index.js` or `node .`
+* Install dependencies with `npm i` and compile project with `npm run build`
+* **Start Programm** with `npm start`
 
 ### Docker Image
 * Download Docker image from [Docker Hub](https://hub.docker.com/r/n404/vantage-node) (`n404/vantage-node`)
