@@ -83,6 +83,10 @@ export default class SocketIO {
         );
         //req.method
         break;
+      default:
+        res.writeHead(204);
+        res.end(JSON.stringify({ code: 204, message: 'OK', value: null }));
+        break;
     }
   }
 }
