@@ -17,7 +17,7 @@ WORKDIR /app
 # copy project files
 COPY package.json .
 COPY package-lock.json .
-COPY static/ /static
+COPY static/ ./static
 COPY healthCheck.js .
 COPY --from=builder /build/dist/ ./dist/
 COPY --from=builder /build/node_modules/ ./node_modules/
