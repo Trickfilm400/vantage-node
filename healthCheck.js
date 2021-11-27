@@ -1,5 +1,5 @@
 const http = require('http');
-const config = require(__dirname + '/config/index.js');
+const config = require(__dirname + '/dist/config/index.js');
 const options = {
   hostname: '127.0.0.1',
   port: config.default.get('socket.port'),
