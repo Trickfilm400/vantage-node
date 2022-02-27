@@ -13,8 +13,8 @@ const socket = new SocketIO();
 process.on('SIGINT', () => {
   console.log('\n');
   db.cleanup()
-    .then(dataHandler.close)
-    .then(socket.cleanup)
+    .then(() => dataHandler.close())
+    .then(() => socket.cleanup())
     .then(() => {
       process.exit(0);
     });
