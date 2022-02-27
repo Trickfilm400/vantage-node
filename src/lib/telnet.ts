@@ -2,7 +2,7 @@ import { ConnectOptions } from 'telnet-client';
 import { Telnet as TelnetClient } from 'telnet-client';
 import config from '../config';
 import EventEmitter = require('events');
-import { error, log } from '../core/log';
+import { logger } from '../core/logger';
 
 export default class Telnet extends EventEmitter {
   public get connected(): boolean {
@@ -38,61 +38,65 @@ export default class Telnet extends EventEmitter {
 
   onTimeout(self: this) {
     self._connected = false;
-    log('<TELNET> ConnectionTimeout');
+    logger.warn('(TELNET - onTimeout) ConnectionTimeout');
     self.connect();
   }
 
   onClose(self: this) {
-    log('<TELNET> Got close event');
+    logger.info('(TELNET - onClose) Got close event');
     if (self.endTelnetConnectionManually) {
       self._connected = false;
     } else {
       //self.connect();
-      log('<TELNET> This should never be called?');
+      //logger.error('<TELNET> This should never be called?');
     }
   }
 
   onError(self: this, err: any) {
-    error(err);
     self.firstPackage = -1;
     self._connected = false;
-    log('<TELNET>  ERROR');
+    logger.error('(TELNET- onError) ERROR: ' + err);
     if (err.code === 'ENOBUFS') process.exit(1);
     self.connect();
   }
 
   onConnect(self: this) {
     self.firstPackage = -1;
-    log('<TELNET> Connection created / connected');
+    logger.info('(TELNET - onConnect) Connection created / connected');
   }
 
   connect() {
     this.client
       .connect(this.params)
       .then(() => this.connectCallback(this))
-      .catch(() => this.onTimeout(this));
+      .catch((e) => {
+        //this.onTimeout(this)
+        logger.error('(TELNET - connect.catch) Cannot Connect to telnet: ' + e);
+      });
   }
   connectCallback(_self: this) {
-    log('<TELNET> Starting Connection...');
+    logger.info('(TELNET - connectCallback) Starting Connection...');
     this._connected = true;
     this.firstPackage = -1;
     this.client
       .send('LOOP -1')
       .then((_: any) => {
-        log('<TELNET> Sent LOOP Command');
+        logger.info('(TELNET - connectCallback) Sent LOOP Command');
       })
       .catch((_: any) => {
-        log('<TELNET> Error while sending LOOP package');
+        logger.warn(
+          '(TELNET - connectCallback) Error while sending LOOP package'
+        );
         this.firstPackage = -2;
       });
   }
   end(): Promise<true> {
     return new Promise((resolve) => {
       this.endTelnetConnectionManually = true;
-      log('<TELNET> Attempting to close connection...');
+      logger.info('(TELNET - end) Attempting to close connection...');
       if (this.client && this.client.end)
         this.client.end().then((_: any) => {
-          log('<TELNET> Connection closed');
+          logger.info('(TELNET - end) Connection closed');
           resolve(true);
         });
     });

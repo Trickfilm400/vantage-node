@@ -7,8 +7,8 @@ import sum from '../core/sum';
 import Telnet from './telnet';
 import packageParser from './packageParser';
 import config from '../config';
-import { error, warn } from '../core/log';
 import dataEmitter from './dataEmitter';
+import { logger } from '../core/logger';
 
 export default class DataHandler {
   private dataArray: DataArrayPackage = {
@@ -39,7 +39,9 @@ export default class DataHandler {
   private parseData(data: any, self: this) {
     const d = packageParser(data);
     if (d.error || !d.data) {
-      error('<HANDLER> Could not parse LOOP-Telnet Package correctly...');
+      logger.error(
+        '(HANDLER) Could not parse LOOP-Telnet Package correctly...'
+      );
     } else {
       self.addData(d.data);
     }
@@ -65,12 +67,13 @@ export default class DataHandler {
   public async get_one_min(self: this) {
     //todo check if it is working
     if (this.lastDataReceived + 15000 < Date.now()) {
-      return warn(
-        '<HANDLER> Did not received new data for about ' +
+      logger.warn(
+        '(HANDLER) Did not received new data for about ' +
           (Date.now() - this.lastDataReceived) +
           ' ms\nSkipping DB Save...\nTelnet Connection is ' +
           (this.telnet.connected ? 'connected' : 'Disconnected')
       );
+      return;
     }
     let data = <DataPackage>{};
     let key: keyof DataArrayPackage;

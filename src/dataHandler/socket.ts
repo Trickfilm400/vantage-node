@@ -3,15 +3,14 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { DataPackage } from '../interfaces/IPackage';
 import config from '../config';
 import { Server, Socket } from 'socket.io';
-import { log } from '../core/log';
 import Telnet from '../lib/telnet';
 import { DataReceiver } from '../lib/dataReceiver';
+import { logger } from '../core/logger';
 
 export default class SocketIO extends DataReceiver<DataPackage> {
   private io: Server;
   private readonly enabled: boolean = false;
   private readonly httpServer: http.Server;
-
 
   public constructor() {
     super(config.get('socket.enabled') ? 'default' : null);
@@ -27,12 +26,16 @@ export default class SocketIO extends DataReceiver<DataPackage> {
       });
       this.io.on('connection', this.onConnectionListener);
       this.httpServer.listen(parseInt(config.get('socket.port')));
-      log('<SOCKET> Enabled Socket.IO on port ' + config.get('socket.port'));
+      logger.info(
+        '<SOCKET> Enabled Socket.IO on port ' + config.get('socket.port')
+      );
     }
   }
 
   private onConnectionListener(socket: Socket) {
-    log('<SOCKET> New Socket Connection from ' + socket.handshake.address);
+    logger.debug(
+      '<SOCKET> New Socket Connection from ' + socket.handshake.address
+    );
   }
 
   onData(data: DataPackage): void {

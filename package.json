@@ -25,7 +25,8 @@
     "convict": "^6.2.1",
     "mysql": "^2.18.1",
     "socket.io": "^4.4.1",
-    "telnet-client": "^2.0.2"
+    "telnet-client": "^2.0.2",
+    "winston": "^3.6.0"
   },
   "devDependencies": {
     "@types/convict": "^6.1.1",

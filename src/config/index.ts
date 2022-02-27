@@ -4,6 +4,12 @@ import * as fs from 'fs';
 
 // Define Config schema
 const config = convict({
+  loglevel: {
+    doc: 'The application loglevel.',
+    format: String,
+    default: 'info',
+    env: 'LOGLEVEL',
+  },
   vantage: {
     url: {
       doc: 'The URL for the vantage Pro Device',
