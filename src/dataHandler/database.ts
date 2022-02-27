@@ -14,7 +14,7 @@ class Database extends DataReceiver<DataPackage> {
   constructor() {
     super(config.get('mysql.enabled') ? 'mysql' : null);
     if (config.get('mysql.enabled') === true) {
-      logger.info('<MySQL> Creating MySQL Connection');
+      logger.info('[ DataHandlers ] -> Enabled Mysql');
       this.mysql = mysql.createConnection({
         host: config.get('mysql.ip'),
         port: parseInt(config.get('mysql.port')),

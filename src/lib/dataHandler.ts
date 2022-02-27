@@ -48,13 +48,13 @@ export default class DataHandler {
   }
 
   public addData(data: IPackage) {
-    //send to socket io etc
-    dataEmitter.sendData(data);
+    let roundedValues = <IPackage>{};
     //save newest values
     let key: keyof IPackage;
     for (key in data) {
       if (data.hasOwnProperty(key)) {
-        this.dataArray[key].push(data[key]);
+        roundedValues[key] = this.round(data[key]);
+        this.dataArray[key].push(roundedValues[key]);
         if (this.dataArray[key].length > this.maxArrayElements) {
           this.dataArray[key].shift();
         }
@@ -62,6 +62,8 @@ export default class DataHandler {
     }
     DataHandler.data = this.dataArray;
     this.lastDataReceived = Date.now();
+    //send to socket io etc
+    dataEmitter.sendData(roundedValues);
   }
 
   public async get_one_min(self: this) {

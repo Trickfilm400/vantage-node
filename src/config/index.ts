@@ -62,6 +62,44 @@ const config = convict({
       env: 'MYSQL_PASSWORD',
     },
   },
+  mqtt: {
+    enable: {
+      doc: 'EMQX enable',
+      format: Boolean,
+      default: true,
+      env: 'EMQX_ENABLE',
+    },
+    host: {
+      doc: 'The IP address rabbitmq should connect to',
+      format: String,
+      default: 'emqx',
+      env: 'EMQX_HOST',
+    },
+    user: {
+      doc: 'Database username',
+      format: String,
+      default: 'emqx',
+      env: 'EMQX_USER',
+    },
+    password: {
+      doc: 'Database password',
+      format: String,
+      default: '',
+      env: 'EMQX_PASSWD',
+    },
+    clientid: {
+      doc: 'The Port rabbitmq should connect to',
+      format: String,
+      default: 'mqtt_vantage_node_system_client',
+      env: 'EMQX_CLIENTID',
+    },
+    topic: {
+      doc: 'The topic',
+      format: String,
+      default: 'battery_data',
+      env: 'EMQX_TOPIC',
+    },
+  },
   socket: {
     port: {
       doc: 'The Websocket Port to use',

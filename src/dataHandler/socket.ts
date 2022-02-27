@@ -27,7 +27,8 @@ export default class SocketIO extends DataReceiver<DataPackage> {
       this.io.on('connection', this.onConnectionListener);
       this.httpServer.listen(parseInt(config.get('socket.port')));
       logger.info(
-        '<SOCKET> Enabled Socket.IO on port ' + config.get('socket.port')
+        '[ DataHandlers ] -> Enabled Socket.io; Port: ' +
+          config.get('socket.port')
       );
     }
   }
