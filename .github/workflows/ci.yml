@@ -5,9 +5,9 @@ name: Node-test
 
 on:
   push:
-    branches: [ rewrite ]
+    branches: [ master ]
   pull_request:
-    branches: [ rewrite ]
+    branches: [ master ]
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
