@@ -3,13 +3,12 @@ import {
   DataPackage,
   IPackage,
 } from '../interfaces/IPackage';
-import Database from './database';
 import sum from '../core/sum';
-import SocketIO from './socket';
 import Telnet from './telnet';
 import packageParser from './packageParser';
 import config from '../config';
-import { error, log, warn } from '../core/log';
+import { error, warn } from '../core/log';
+import dataEmitter from './dataEmitter';
 
 export default class DataHandler {
   private dataArray: DataArrayPackage = {
@@ -23,33 +22,18 @@ export default class DataHandler {
     windDirection: [],
     windSpeed: [],
   };
+  static data: DataArrayPackage;
   private lastDataReceived = 0;
-  private mysql = new Database();
   private telnet = new Telnet();
-  private socket: SocketIO;
   private readonly maxArrayElements = 60;
   private round = (r: number) => Math.round((r + Number.EPSILON) * 100) / 100;
 
   constructor() {
-    this.mysql.connect().then(() => {
-      log('<MYSQL> Checking MySQL Schema...');
-      this.mysql
-        .checkTableExistent()
-        .then(() => {
-          log('<MYSQL> Schema should be created');
-        })
-        .catch((e) => {
-          error('<MYSQL> There is an error while checking the MySQL Schema...');
-          error(e);
-        });
-    });
-    this.telnet.dataEvent.on('data', (data) => this.parseData(data, this));
+    this.telnet.on('data', (data) => this.parseData(data, this));
 
     let intervalSeconds = config.get('saveinterval') * 1000;
 
     setInterval(this.get_one_min, intervalSeconds, this);
-
-    this.socket = new SocketIO(this);
   }
 
   private parseData(data: any, self: this) {
@@ -62,8 +46,8 @@ export default class DataHandler {
   }
 
   public addData(data: IPackage) {
-    //send data via socket.io, if enabled
-    this.socket.sendData(data);
+    //send to socket io etc
+    dataEmitter.sendData(data);
     //save newest values
     let key: keyof IPackage;
     for (key in data) {
@@ -74,9 +58,12 @@ export default class DataHandler {
         }
       }
     }
+    DataHandler.data = this.dataArray;
     this.lastDataReceived = Date.now();
   }
+
   public async get_one_min(self: this) {
+    //todo check if it is working
     if (this.lastDataReceived + 15000 < Date.now()) {
       return warn(
         '<HANDLER> Did not received new data for about ' +
@@ -100,36 +87,10 @@ export default class DataHandler {
         data[key] = self.round(sum(arr) / arr.length);
       }
     }
-    await self.mysql.insert(data);
-  }
-
-  public getLastDataset() {
-    let data = <DataPackage>{};
-    let key: keyof DataArrayPackage;
-    for (key in this.dataArray) {
-      if (this.dataArray.hasOwnProperty(key)) {
-        let arr = this.dataArray[key].slice();
-        if (key === 'windSpeed') {
-          data['windSpeedMax'] = Math.max(...arr);
-        }
-        if (key === 'dayRain') {
-          data[key] = arr[arr.length - 1];
-          continue;
-        }
-        data[key] = this.dataArray[key][this.dataArray[key].length - 1] ?? -1;
-        //data[key] = this.round(sum(arr) / arr.length);
-      }
-    }
-    console.log(data);
-    return data;
+    dataEmitter.sendData(data, 'mysql');
   }
 
   close(): Promise<true> {
-    return new Promise((resolve) => {
-      this.mysql
-        .closeMySQL()
-        .then(() => this.telnet.end())
-        .then(() => resolve(true));
-    });
+    return this.telnet.end();
   }
 }
