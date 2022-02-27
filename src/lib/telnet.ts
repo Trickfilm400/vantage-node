@@ -1,6 +1,5 @@
 import { ConnectOptions } from 'telnet-client';
 import { Telnet as TelnetClient } from 'telnet-client';
-
 import config from '../config';
 import EventEmitter = require('events');
 import { error, log } from '../core/log';
@@ -14,7 +13,6 @@ export default class Telnet extends EventEmitter {
   private _connected = false;
   private firstPackage = -1;
   private endTelnetConnectionManually = false;
-  public dataEvent;
   public static lastData = -1;
   constructor() {
     super();
@@ -28,14 +26,13 @@ export default class Telnet extends EventEmitter {
     this.client.on('error', (e: any) => this.onError(this, e));
     this.client.on('connect', () => this.onConnect(this));
     this.connect();
-    this.dataEvent = new EventEmitter();
   }
 
   onData(self: this, data: any) {
     self.firstPackage++;
     if (self.firstPackage > 1 && self._connected) {
       Telnet.lastData = Date.now();
-      self.dataEvent.emit('data', data);
+      self.emit('data', data);
     }
   }
 
