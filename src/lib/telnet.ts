@@ -1,5 +1,5 @@
 import { ConnectOptions } from 'telnet-client';
-const telnet_client = require('telnet-client');
+import { Telnet as TelnetClient } from 'telnet-client';
 
 import config from '../config';
 import EventEmitter = require('events');
@@ -9,7 +9,7 @@ export default class Telnet extends EventEmitter {
   public get connected(): boolean {
     return this._connected;
   }
-  private client = new telnet_client();
+  private client = new TelnetClient();
   private params = <ConnectOptions>{};
   private _connected = false;
   private firstPackage = -1;
@@ -73,7 +73,7 @@ export default class Telnet extends EventEmitter {
     this.client
       .connect(this.params)
       .then(() => this.connectCallback(this))
-      .catch(this.onTimeout);
+      .catch(() => this.onTimeout(this));
   }
   connectCallback(_self: this) {
     log('<TELNET> Starting Connection...');
