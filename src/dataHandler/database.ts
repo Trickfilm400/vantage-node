@@ -1,15 +1,18 @@
 import * as mysql from 'mysql';
-import config from '../config';
 import { Connection } from 'mysql';
+import config from '../config';
 import * as fs from 'fs';
 import { DataPackage } from '../interfaces/IPackage';
 import { error, log } from '../core/log';
 import * as path from 'path';
+import { DataReceiver } from '../lib/dataReceiver';
 
-class Database {
+class Database extends DataReceiver<DataPackage> {
   private readonly mysql: Connection | null = null;
   private readonly enabled: boolean = false;
+
   constructor() {
+    super(config.get('mysql.enabled') ? 'mysql' : null);
     if (config.get('mysql.enabled') === true) {
       log('<MySQL> Creating MySQL Connection');
       this.mysql = mysql.createConnection({
@@ -19,9 +22,23 @@ class Database {
         user: config.get('mysql.username'),
         password: config.get('mysql.password'),
       });
-
+      this.start();
       this.enabled = true;
     }
+  }
+
+  async start() {
+    this.connect().then(() => {
+      log('<MYSQL> Checking MySQL Schema...');
+      this.checkTableExistent()
+        .then(() => {
+          log('<MYSQL> Schema should be created');
+        })
+        .catch((e) => {
+          error('<MYSQL> There is an error while checking the MySQL Schema...');
+          error(e);
+        });
+    });
   }
   async checkTableExistent() {
     return new Promise<any>((resolve, reject) => {
@@ -43,6 +60,7 @@ class Database {
         });
     });
   }
+
   async connect() {
     return new Promise((resolve, reject) => {
       if (this.enabled && this.mysql) {
@@ -60,6 +78,11 @@ class Database {
       }
     });
   }
+
+  onData(data: DataPackage): void {
+    this.insert(data);
+  }
+
   async insert(data: DataPackage) {
     return new Promise((resolve, reject) => {
       if (this.enabled && this.mysql) {
@@ -94,7 +117,8 @@ class Database {
       }
     });
   }
-  async closeMySQL() {
+
+  async cleanup() {
     if (this.enabled) {
       log('<MySQL> Closing Mysql Connection');
       return new Promise((resolve, reject) => {
@@ -108,4 +132,5 @@ class Database {
     }
   }
 }
+
 export default Database;
