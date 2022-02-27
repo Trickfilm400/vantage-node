@@ -1,4 +1,4 @@
-FROM node:14-alpine3.14 AS builder
+FROM node:16-alpine3.15 AS builder
 
 WORKDIR /build
 
@@ -8,7 +8,7 @@ RUN npm ci
 RUN npm run build
 RUN npm ci --only=production
 
-FROM node:14-alpine3.14
+FROM node:16-alpine3.15
 
 MAINTAINER Trickfilm400, info@trickfilm400.de
 
