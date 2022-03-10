@@ -96,7 +96,7 @@ const config = convict({
     topic: {
       doc: 'The topic for mqtt',
       format: String,
-      default: 'battery_data',
+      default: 'vantage_data',
       env: 'EMQX_TOPIC',
     },
   },
