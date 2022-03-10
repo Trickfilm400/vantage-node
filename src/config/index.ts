@@ -4,6 +4,12 @@ import * as fs from 'fs';
 
 // Define Config schema
 const config = convict({
+  loglevel: {
+    doc: 'The application loglevel.',
+    format: String,
+    default: 'info',
+    env: 'LOGLEVEL',
+  },
   vantage: {
     url: {
       doc: 'The URL for the vantage Pro Device',
@@ -54,6 +60,44 @@ const config = convict({
       format: String,
       default: '',
       env: 'MYSQL_PASSWORD',
+    },
+  },
+  mqtt: {
+    enable: {
+      doc: 'EMQX enable',
+      format: Boolean,
+      default: true,
+      env: 'EMQX_ENABLE',
+    },
+    host: {
+      doc: 'The IP address for connecting to mqtt',
+      format: String,
+      default: 'emqx',
+      env: 'EMQX_HOST',
+    },
+    user: {
+      doc: 'EMQX username',
+      format: String,
+      default: 'emqx',
+      env: 'EMQX_USER',
+    },
+    password: {
+      doc: 'EMQX password',
+      format: String,
+      default: '',
+      env: 'EMQX_PASSWD',
+    },
+    clientid: {
+      doc: 'The Port for connecting to mqtt',
+      format: String,
+      default: 'mqtt_vantage_node_system_client',
+      env: 'EMQX_CLIENTID',
+    },
+    topic: {
+      doc: 'The topic for mqtt',
+      format: String,
+      default: 'vantage_data',
+      env: 'EMQX_TOPIC',
     },
   },
   socket: {

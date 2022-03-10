@@ -24,7 +24,7 @@ Get Data from Vantage Pro Weatherstation from Davis Instruments via telnet conne
 2. Configuration with environment variables (mostly for docker / kubernetes)
 
 #### `config.json`
-````json
+````json5
 {
     "vantage": {
         "url": "192.168.178.xxx" //REQUIRED, default ""
@@ -91,7 +91,7 @@ The Packages have the following structure:
 
 if healthcheck is ok (HTTP Statuscode: 200):
 
-```json
+```json5
 {
     "message": "Packages are valid", 
     "code": 200, 
@@ -101,7 +101,7 @@ if healthcheck is ok (HTTP Statuscode: 200):
 
 if healthcheck is **not valid**: (HTTP Statuscode: 500)
 
-```json
+```json5
 {
     "message": "Packages are outdated and invalid!",
     "code": 500, 

@@ -1,19 +1,19 @@
 import * as http from 'http';
-import { IPackage } from '../interfaces/IPackage';
+import { IncomingMessage, ServerResponse } from 'http';
+import { DataPackage } from '../interfaces/IPackage';
 import config from '../config';
 import { Server, Socket } from 'socket.io';
-import { log } from '../core/log';
-import { IncomingMessage, ServerResponse } from 'http';
-import DataHandler from './dataHandler';
-import Telnet from './telnet';
+import Telnet from '../lib/telnet';
+import { DataReceiver } from '../lib/dataReceiver';
+import { logger } from '../core/logger';
 
-export default class SocketIO {
+export default class SocketIO extends DataReceiver<DataPackage> {
   private io: Server;
   private readonly enabled: boolean = false;
-  private httpServer: http.Server;
-  private dataHandler: DataHandler;
-  public constructor(dataHandler: DataHandler) {
-    this.dataHandler = dataHandler;
+  private readonly httpServer: http.Server;
+
+  public constructor() {
+    super(config.get('socket.enabled') ? 'default' : null);
     this.enabled = config.get('socket.enabled');
     if (this.enabled) {
       this.httpServer = http.createServer((req, res) =>
@@ -21,31 +21,38 @@ export default class SocketIO {
       );
       this.io = new Server(this.httpServer, {
         cors: {
-          origin: '*'
+          origin: '*',
         },
       });
       this.io.on('connection', this.onConnectionListener);
       this.httpServer.listen(parseInt(config.get('socket.port')));
-      log('<SOCKET> Enabled Socket.IO on port ' + config.get('socket.port'));
+      logger.info(
+        '[ DataHandlers ] -> Enabled Socket.io; Port: ' +
+          config.get('socket.port')
+      );
     }
   }
+
   private onConnectionListener(socket: Socket) {
-    log('<SOCKET> New Socket Connection from ' + socket.handshake.address);
+    logger.debug(
+      '<SOCKET> New Socket Connection from ' + socket.handshake.address
+    );
   }
-  public sendData(data: IPackage) {
-    if (this.enabled)
-      this.io.sockets.emit('data', {
-        barometer: data.barometer,
-        intemp: data.inTemperature,
-        inhum: data.inHumidity,
-        outtemp: data.outTemperature,
-        outhum: data.outHumidity,
-        windspeed: data.windSpeed,
-        winddir: data.windDirection,
-        rainrate: data.rainRate,
-        dayrain: data.dayRain,
-      });
+
+  onData(data: DataPackage): void {
+    this.io.sockets.emit('data', {
+      barometer: data.barometer,
+      intemp: data.inTemperature,
+      inhum: data.inHumidity,
+      outtemp: data.outTemperature,
+      outhum: data.outHumidity,
+      windspeed: data.windSpeed,
+      winddir: data.windDirection,
+      rainrate: data.rainRate,
+      dayrain: data.dayRain,
+    });
   }
+
   private requestHandler(
     req: IncomingMessage,
     res: ServerResponse,
@@ -73,7 +80,7 @@ export default class SocketIO {
         break;
       case '/lastdata':
         res.writeHead(200);
-        const json = self.dataHandler.getLastDataset();
+        const json = self.getLastDataset();
         res.end(
           JSON.stringify({
             value: json,

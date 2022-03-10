@@ -1,17 +1,20 @@
 import * as mysql from 'mysql';
-import config from '../config';
 import { Connection } from 'mysql';
+import config from '../config';
 import * as fs from 'fs';
 import { DataPackage } from '../interfaces/IPackage';
-import { error, log } from '../core/log';
 import * as path from 'path';
+import { DataReceiver } from '../lib/dataReceiver';
+import { logger } from '../core/logger';
 
-class Database {
+class Database extends DataReceiver<DataPackage> {
   private readonly mysql: Connection | null = null;
   private readonly enabled: boolean = false;
+
   constructor() {
+    super(config.get('mysql.enabled') ? 'mysql' : null);
     if (config.get('mysql.enabled') === true) {
-      log('<MySQL> Creating MySQL Connection');
+      logger.info('[ DataHandlers ] -> Enabled Mysql');
       this.mysql = mysql.createConnection({
         host: config.get('mysql.ip'),
         port: parseInt(config.get('mysql.port')),
@@ -19,9 +22,25 @@ class Database {
         user: config.get('mysql.username'),
         password: config.get('mysql.password'),
       });
-
+      this.start();
       this.enabled = true;
     }
+  }
+
+  async start() {
+    this.connect().then(() => {
+      logger.info('<MYSQL> Checking MySQL Schema...');
+      this.checkTableExistent()
+        .then(() => {
+          logger.info('<MYSQL> Schema should be created');
+        })
+        .catch((e) => {
+          logger.error(
+            '<MYSQL> There is an error while checking the MySQL Schema...'
+          );
+          logger.error(e);
+        });
+    });
   }
   async checkTableExistent() {
     return new Promise<any>((resolve, reject) => {
@@ -33,33 +52,41 @@ class Database {
       if (this.enabled && this.mysql)
         this.mysql.query(schema, (err) => {
           if (err) {
-            error('<MySQL> Could not check for database, disabling MYSQL...');
-            error(err);
+            logger.error(
+              '<MySQL> Could not check for database, disabling MYSQL...'
+            );
+            logger.error(err);
             reject(err);
           } else {
-            log('<MySQL> Checked Mysql Table Schema... OK');
+            logger.info('<MySQL> Checked Mysql Table Schema... OK');
             resolve(true);
           }
         });
     });
   }
+
   async connect() {
     return new Promise((resolve, reject) => {
       if (this.enabled && this.mysql) {
-        log('<MySQL> Connecting to MYSQL...');
+        logger.info('<MySQL> Connecting to MYSQL...');
         this.mysql.connect((e) => {
           if (e) {
-            error('<MySQL> Error while connection to mysql...');
-            error(e);
+            logger.error('<MySQL> Error while connection to mysql...');
+            logger.error(e);
             reject(e);
           } else {
-            log('<MySQL> Connected to MYSQL... OK');
+            logger.info('<MySQL> Connected to MYSQL... OK');
             resolve(true);
           }
         });
       }
     });
   }
+
+  onData(data: DataPackage): void {
+    this.insert(data);
+  }
+
   async insert(data: DataPackage) {
     return new Promise((resolve, reject) => {
       if (this.enabled && this.mysql) {
@@ -83,10 +110,10 @@ class Database {
           ],
           (err) => {
             if (err) {
-              error(err);
+              logger.error(err);
               reject(err);
             } else {
-              log('<MySQL> Inserted new Data into MySQL');
+              logger.debug('<MySQL> Inserted new Data into MySQL');
               resolve(true);
             }
           }
@@ -94,13 +121,14 @@ class Database {
       }
     });
   }
-  async closeMySQL() {
+
+  async cleanup() {
     if (this.enabled) {
-      log('<MySQL> Closing Mysql Connection');
+      logger.info('<MySQL> Closing Mysql Connection');
       return new Promise((resolve, reject) => {
         if (this.enabled && this.mysql) {
           this.mysql.end(() => {
-            log('<MySQL> Closed Mysql Connection... OK');
+            logger.info('<MySQL> Closed Mysql Connection... OK');
             resolve(true);
           });
         } else reject('<MySQL> There is no MySQL connection to end...');
@@ -108,4 +136,5 @@ class Database {
     }
   }
 }
+
 export default Database;
