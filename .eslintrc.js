@@ -2,21 +2,19 @@ module.exports = {
   root: true,
   env: {
     node: true,
+    mocha: true,
   },
-  extends: ['eslint:recommended'],
-  plugins: ['prettier'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
+  plugins: ['prettier', '@typescript-eslint'],
   parserOptions: {
     ecmaVersion: 2020,
   },
+  parser: '@typescript-eslint/parser',
   rules: {
-    indent: [
-      'error',
-      2,
-      {
-        SwitchCase: 1,
-      },
-    ],
-    quotes: ['error', 'single'],
     semi: ['error', 'always'],
     'no-var': ['error'],
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
