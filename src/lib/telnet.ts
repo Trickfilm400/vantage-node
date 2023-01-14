@@ -47,8 +47,10 @@ export default class Telnet extends EventEmitter {
     if (self.endTelnetConnectionManually) {
       self._connected = false;
     } else {
-      //self.connect();
-      //logger.error('<TELNET> This should never be called?');
+      self.connect();
+      logger.error(
+        '(TELNET - onClose) This should never be called? (reconnect on close event)'
+      );
     }
   }
 
