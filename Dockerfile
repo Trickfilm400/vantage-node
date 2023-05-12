@@ -1,14 +1,14 @@
-FROM node:16-alpine3.16 AS builder
+FROM node:18-alpine3.17 AS builder
 
 WORKDIR /build
 
 # copy files and run build, then install production dependencies
 COPY . .
-RUN npm ci
+RUN npm ci --fund=false
 RUN npm run build
-RUN npm ci --only=production
+RUN npm ci --omit=dev --fund=false --audit=false
 
-FROM node:16-alpine3.16
+FROM node:18-alpine3.17
 
 MAINTAINER Trickfilm400, info@trickfilm400.de
 
