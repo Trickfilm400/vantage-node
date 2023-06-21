@@ -134,6 +134,7 @@ class Database extends DataReceiver<DataPackage> {
         } else reject('<MySQL> There is no MySQL connection to end...');
       });
     }
+    return Promise.resolve();
   }
 }
 
