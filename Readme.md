@@ -1,8 +1,6 @@
 # Vantage-Node
 Get Data from Vantage Pro Weatherstation from Davis Instruments via telnet connection
 
-### This is not a normal NPM package at the moment, it is rather a finished program for docker 
-
 # Installation
 ## There are two options: Use the docker image, or the plain nodejs script
 ### Nodejs Usage
