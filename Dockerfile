@@ -25,6 +25,8 @@ COPY --from=builder /build/node_modules/ ./node_modules/
 # healthcheck
 HEALTHCHECK --interval=10s --retries=2 CMD node healthCheck.js || exit 1
 
+EXPOSE 3010/tcp
+
 # change user permissions
 RUN chown node:node -R *
 # switch to node user for more security
