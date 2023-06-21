@@ -17,7 +17,7 @@ export default class Telnet extends EventEmitter {
   constructor() {
     super();
     this.params.negotiationMandatory = false;
-    this.params.timeout = 2500;
+    this.params.timeout = 12500;
     this.params.port = parseInt(config.get('vantage.port'));
     this.params.host = config.get('vantage.url');
     this.client.on('timeout', () => this.onTimeout(this));
