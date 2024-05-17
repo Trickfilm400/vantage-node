@@ -1,4 +1,4 @@
-FROM node:18-alpine3.17 AS builder
+FROM node:20-alpine3.19 AS builder
 
 WORKDIR /build
 
@@ -8,7 +8,7 @@ RUN npm ci --fund=false
 RUN npm run build
 RUN npm ci --omit=dev --fund=false --audit=false
 
-FROM node:18-alpine3.17
+FROM node:20-alpine3.19
 
 MAINTAINER Trickfilm400, info@trickfilm400.de
 
