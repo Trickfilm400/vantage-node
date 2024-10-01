@@ -1,8 +1,18 @@
 # Vantage-Node
 Get Data from Vantage Pro Weatherstation from Davis Instruments via telnet connection
 
+# Features
+- Telnet Live-Connection (data every 2 seconds)
+- Prometheus Data export
+- MySQL Storage
+- Socket.IO Server
+- Simple REST API
+- MQTT Export
+- InfluxDB Export (upcoming)
+
+
 # Installation
-## There are two options: Use the docker image, or the plain nodejs script
+There are two options: Use the docker image, or the plain nodejs script
 ### Nodejs Usage
 * Copy `config.example.json` to `config.json` and change your data
 * Create a MySQL / MariaDB Database with user
@@ -37,7 +47,15 @@ Get Data from Vantage Pro Weatherstation from Davis Instruments via telnet conne
     "socket": {
         "enabled": true | false, //default true
         "port": 3011 //default 3010
-    }, 
+    },
+    "mqtt": {
+      "enable": true | false,
+      "host": "emqx",
+      "user": "emqx",
+      "password": "",
+      "clientid": "mqtt_vantage_node_system_client",
+      "topic": "vantage_data"
+    },
     "saveinterval": 60 //default 60, given in seconds
 }
 ````
@@ -84,6 +102,8 @@ The Packages have the following structure:
 	"message": "Test successful"
 }
 ```
+
+`/metrics` => returns Prometheus Metrics of the weather data
 
 `/healthcheck`(used for internal docker checks):
 

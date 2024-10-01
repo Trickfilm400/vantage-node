@@ -1,5 +1,8 @@
 console.log('Starting Program...');
 
+import { HttpServer } from './lib/httpServer';
+const httpServer = new HttpServer();
+
 import DataHandler from './lib/dataHandler';
 
 const dataHandler = new DataHandler();
@@ -11,6 +14,8 @@ import SocketIO from './dataHandler/socket';
 const socket = new SocketIO();
 import Mqtt from './dataHandler/mqtt';
 const mqtt = new Mqtt();
+import { Prometheus } from './dataHandler/prometheus';
+const prometheus = new Prometheus();
 
 process.on('SIGINT', () => {
   console.log('\n');
@@ -18,6 +23,8 @@ process.on('SIGINT', () => {
     .then(() => dataHandler.close())
     .then(() => socket.cleanup())
     .then(() => mqtt.cleanup())
+    .then(() => prometheus.cleanup())
+    .then(() => httpServer.cleanup())
     .then(() => {
       process.exit(0);
     });

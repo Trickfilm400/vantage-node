@@ -95,6 +95,29 @@ export default class DataHandler {
     dataEmitter.sendData(data, 'mysql');
   }
 
+  static getLastDataset() {
+    const data = <DataPackage>{};
+    let key: keyof DataArrayPackage;
+    for (key in DataHandler.data) {
+      if (DataHandler.data.hasOwnProperty(key)) {
+        //todo what the heck is this?
+        const arr = DataHandler.data[key].slice();
+        if (key === 'windSpeed') {
+          data['windSpeedMax'] = Math.max(...arr);
+        }
+        if (key === 'dayRain') {
+          data[key] = arr[arr.length - 1];
+          continue;
+        }
+        data[key] =
+          DataHandler.data[key][DataHandler.data[key].length - 1] ?? -1;
+        //data[key] = this.round(sum(arr) / arr.length);
+      }
+    }
+    console.log(data);
+    return data;
+  }
+
   close(): Promise<true> {
     return this.telnet.end();
   }
