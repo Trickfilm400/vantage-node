@@ -24,6 +24,38 @@ const config = convict({
       env: 'VANTAGE_PORT',
     },
   },
+  influxdb: {
+    enabled: {
+      doc: 'if influxdb should be used',
+      format: Boolean,
+      default: false,
+      env: 'INFLUXDB_ENABLED',
+    },
+    url: {
+      doc: 'The URL Endpoint for InfluxDB',
+      format: String,
+      default: '',
+      env: 'INFLUXDB_URL',
+    },
+    api_token: {
+      doc: 'The API Token for InfluxDB',
+      format: String,
+      default: '',
+      env: 'INFLUXDB_API_TOKEN',
+    },
+    organisation: {
+      doc: 'The organisation for InfluxDB',
+      format: String,
+      default: '',
+      env: 'INFLUXDB_ORGANISATION',
+    },
+    bucket: {
+      doc: 'The bucket for InfluxDB',
+      format: String,
+      default: '',
+      env: 'INFLUXDB_BUCKET',
+    },
+  },
   mysql: {
     enabled: {
       doc: 'The IP address Mysql should connect to',

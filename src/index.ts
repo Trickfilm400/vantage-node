@@ -16,6 +16,8 @@ import Mqtt from './dataHandler/mqtt';
 const mqtt = new Mqtt();
 import { Prometheus } from './dataHandler/prometheus';
 const prometheus = new Prometheus();
+import { Influxdb } from './dataHandler/influxdb';
+const influxdb = new Influxdb();
 
 process.on('SIGINT', () => {
   console.log('\n');
@@ -24,6 +26,7 @@ process.on('SIGINT', () => {
     .then(() => socket.cleanup())
     .then(() => mqtt.cleanup())
     .then(() => prometheus.cleanup())
+    .then(() => influxdb.cleanup())
     .then(() => httpServer.cleanup())
     .then(() => {
       process.exit(0);
