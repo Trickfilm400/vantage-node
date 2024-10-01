@@ -1,4 +1,3 @@
-const http = require('http');
 const config = require(__dirname + '/dist/config/index.js');
 const options = {
   hostname: '127.0.0.1',
@@ -7,20 +6,11 @@ const options = {
   method: 'GET',
 };
 
-const req = http.request(options, (res) => {
-  // console.log(`statusCode: ${res.statusCode}`);
-
-  res.on('data', (d) => {
-    d = JSON.parse(d.toString());
-    console.log(d);
-    if (Date.now() - d.value < 30 * 1000) process.exit(0);
-    else process.exit(1);
-  });
-});
-
-req.on('error', (error) => {
-  console.error(error);
-  process.exit(1);
-});
-
-req.end();
+fetch(`http://${options.hostname}:${options.port}${options.path}`).then(response => response.json()).then(data => {
+  console.log(data);
+  if (Date.now() - data.value < 30 * 1000) process.exitCode = 0;
+  else process.exitCode = 1;
+}).catch(error => {
+  console.log(error)
+  process.exitCode = 1;
+})
