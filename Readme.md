@@ -48,6 +48,13 @@ There are two options: Use the docker image, or the plain nodejs script
         "enabled": true | false, //default true
         "port": 3011 //default 3010
     },
+    "influxdb": {
+      "api_token": "<token>",
+      "bucket": "<bucket>",
+      "organisation": "<org>>",
+      "url": "http://<host:port>",
+      "enabled": true
+    },
     "mqtt": {
       "enable": true | false,
       "host": "emqx",
@@ -60,19 +67,32 @@ There are two options: Use the docker image, or the plain nodejs script
 }
 ````
 #### List of supported environment variables
-| Environment Variable | Description                                                 | Default Value | Type    | Required |
-|----------------------|-------------------------------------------------------------|---------------|---------|----------|
-| VANTAGE_URL          | The URL to the Vantage-Pro Telnet adapter                   | ""            | string  | yes      |
-| VANTAGE_PORT         | The Port to the Vantage-Pro telnet adapter                  | 22222         | number  | no       |
-| MYSQL_ENABLED        | If MYSQL should be used                                     | true          | boolean | yes      |
-| MYSQL_IP             | The MYSQL Host (IP or Hostname)                             | 127.0.0.1     | string  | no       |
-| MYSQL_PORT           | The Mysql Port                                              | 3306          | number  | no       |
-| MYSQL_DB             | The MYSQL Database name                                     | weather       | string  | no       |
-| MYSQL_USERNAME       | The MYSQL Database user                                     | weather       | string  | no       |
-| MYSQL_PASSWORD       | The MYSQL database password                                 | ""            | string  | no       |
-| SOCKET_PORT          | The Port the websocket-Server should listen on              | 3010          | number  | no       |
-| SOCKET_ENABLED       | If websocket should be enabled                              | true          | boolean | no       |
-| SAVE_INTERVAL        | the interval the data should be saved in the MYSQL Database | 60            | number  | no       |
+| Environment Variable  | Description                                                 | Default Value | Type    | Required |
+|-----------------------|-------------------------------------------------------------|---------------|---------|----------|
+| VANTAGE_URL           | The URL to the Vantage-Pro Telnet adapter                   | ""            | string  | yes      |
+| VANTAGE_PORT          | The Port to the Vantage-Pro telnet adapter                  | 22222         | number  | no       |
+| MYSQL_ENABLED         | If MYSQL should be used                                     | true          | boolean | yes      |
+| MYSQL_IP              | The MYSQL Host (IP or Hostname)                             | 127.0.0.1     | string  | no       |
+| MYSQL_PORT            | The Mysql Port                                              | 3306          | number  | no       |
+| MYSQL_DB              | The MYSQL Database name                                     | weather       | string  | no       |
+| MYSQL_USERNAME        | The MYSQL Database user                                     | weather       | string  | no       |
+| MYSQL_PASSWORD        | The MYSQL database password                                 | ""            | string  | no       |
+| SOCKET_PORT           | The Port the websocket-Server should listen on              | 3010          | number  | no       |
+| SOCKET_ENABLED        | If websocket should be enabled                              | true          | boolean | no       |
+| SAVE_INTERVAL         | the interval the data should be saved in the MYSQL Database | 60            | number  | no       |
+| LOGLEVEL              |                                                             |               | string  | no       |
+| INFLUXDB_ENABLED      |                                                             |               | boolean | no       |
+| INFLUXDB_URL          |                                                             |               | string  | no       |
+| INFLUXDB_API_TOKEN    |                                                             |               | string  | no       |
+| INFLUXDB_ORGANISATION |                                                             |               | string  | no       |
+| INFLUXDB_BUCKET       |                                                             |               | string  | no       |
+| EMQX_ENABLE           | true, if mqtt should be used                                |               | boolean | no       |
+| EMQX_HOST             | emqx host                                                   |               | string  | no       |
+| EMQX_USER             | emqx username                                               |               | string  | no       |
+| EMQX_PASSWD           | emqx password                                               |               | string  | no       |
+| EMQX_CLIENTID         | emqx clientid - random                                      |               | string  | no       |
+| EMQX_TOPIC            | emqx topic                                                  |               | string  | no       |
+| CONFIG_FILE           | path of config.json file                                    |               | string  | no       |
 ----
 
 ### Websocket Usage
