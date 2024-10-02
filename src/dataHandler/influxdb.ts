@@ -2,10 +2,10 @@ import { DataReceiver } from '../lib/dataReceiver';
 import { DataPackage } from '../interfaces/IPackage';
 import { InfluxDB, Point, WriteApi } from '@influxdata/influxdb-client';
 import config from '../config';
-import { logger } from '../core/logger';
 
 export class Influxdb extends DataReceiver<DataPackage> {
   private writerClient: WriteApi | undefined;
+  private lastValues: DataPackage = <DataPackage>{};
   constructor() {
     super();
     if (config.get('influxdb.enabled')) {
@@ -20,15 +20,18 @@ export class Influxdb extends DataReceiver<DataPackage> {
     }
   }
   onData(data: DataPackage): void {
-    logger.debug('Influxdb data', data);
+    //logger.debug('Influxdb data', data);
     if (!this.writerClient) return;
 
     let key: keyof DataPackage;
     const points: Point[] = [];
     for (key in data) {
+      //skip if value has not changed since the last package to reduce load on the database saving part
+      if (data[key] === this.lastValues[key]) continue;
       const point = new Point(key);
       point.floatField('value', data[key]);
       points.push(point);
+      this.lastValues[key] = data[key];
     }
     this.writerClient.writePoints(points);
   }
