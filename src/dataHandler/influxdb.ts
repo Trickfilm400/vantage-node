@@ -27,7 +27,12 @@ export class Influxdb extends DataReceiver<DataPackage> {
     const points: Point[] = [];
     for (key in data) {
       //skip if value has not changed since the last package to reduce load on the database saving part
-      if (data[key] === this.lastValues[key]) continue;
+      // AND setting is true to skip values
+      if (
+        config.get('influxdb.skip_same_values') &&
+        data[key] === this.lastValues[key]
+      )
+        continue;
       const point = new Point(key);
       point.floatField('value', data[key]);
       points.push(point);

@@ -31,6 +31,12 @@ const config = convict({
       default: false,
       env: 'INFLUXDB_ENABLED',
     },
+    skip_same_values: {
+      doc: 'if the value has not changed since the last value, dont write it into the db',
+      format: Boolean,
+      default: true,
+      env: 'INFLUXDB_SKIP_SAME_VALUES',
+    },
     url: {
       doc: 'The URL Endpoint for InfluxDB',
       format: String,
