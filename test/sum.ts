@@ -1,5 +1,6 @@
 import assert = require('assert');
 import sum from '../src/core/sum';
+import { describe, it } from 'node:test';
 
 describe('#sum()', () => {
   it('should sum up numbers of array', () => {
