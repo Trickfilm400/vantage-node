@@ -8,7 +8,7 @@ Get Data from Vantage Pro Weatherstation from Davis Instruments via telnet conne
 - Socket.IO Server
 - Simple REST API
 - MQTT Export
-- InfluxDB Export (upcoming)
+- InfluxDB Export
 
 
 # Installation
