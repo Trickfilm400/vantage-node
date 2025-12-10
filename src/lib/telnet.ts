@@ -14,7 +14,7 @@ export default class Telnet extends EventEmitter {
   private _connected = false;
   private firstPackage = -1;
   private endTelnetConnectionManually = false;
-  private pendingConnectionTimeout: NodeJS.Timeout;
+  private pendingConnectionTimeout: NodeJS.Timeout | null;
   public static lastData = -1;
   constructor() {
     super();
@@ -33,7 +33,12 @@ export default class Telnet extends EventEmitter {
   reStartConnection() {
     if (!this.pendingConnectionTimeout) {
       logger.debug('(TELNET - pendingConnectionTimeout) - setting timeout now');
-      this.pendingConnectionTimeout = setTimeout(() => this.connect(), 10_000);
+      this.pendingConnectionTimeout = setTimeout(() => {
+        logger.debug(
+          '(TELNET - pendingConnectionTimeout) - calling connect from timeout now...'
+        );
+        this.connect();
+      }, 10_000);
     } else {
       logger.debug(
         '(TELNET - pendingConnectionTimeout) - timeout was already set. skipping.'
@@ -81,7 +86,9 @@ export default class Telnet extends EventEmitter {
   }
 
   connect() {
-    clearTimeout(this.pendingConnectionTimeout);
+    clearTimeout(this.pendingConnectionTimeout!);
+    this.pendingConnectionTimeout = null;
+    logger.debug('(TELNET - connect) Connection initiating...');
     this.client
       .connect(this.params)
       .then(() => this.connectCallback())
