@@ -3,6 +3,7 @@ import { Telnet as TelnetClient } from 'telnet-client';
 import config from '../config';
 import EventEmitter = require('events');
 import { logger } from '../core/logger';
+import { clearTimeout } from 'node:timers';
 
 export default class Telnet extends EventEmitter {
   public get connected(): boolean {
@@ -13,6 +14,7 @@ export default class Telnet extends EventEmitter {
   private _connected = false;
   private firstPackage = -1;
   private endTelnetConnectionManually = false;
+  private pendingConnectionTimeout: NodeJS.Timeout;
   public static lastData = -1;
   constructor() {
     super();
@@ -28,6 +30,17 @@ export default class Telnet extends EventEmitter {
     this.connect();
   }
 
+  reStartConnection() {
+    if (!this.pendingConnectionTimeout) {
+      logger.debug('(TELNET - pendingConnectionTimeout) - setting timeout now');
+      this.pendingConnectionTimeout = setTimeout(() => this.connect(), 10_000);
+    } else {
+      logger.debug(
+        '(TELNET - pendingConnectionTimeout) - timeout was already set. skipping.'
+      );
+    }
+  }
+
   onData(self: this, data: any) {
     self.firstPackage++;
     if (self.firstPackage > 1 && self._connected) {
@@ -39,7 +52,7 @@ export default class Telnet extends EventEmitter {
   onTimeout(self: this) {
     self._connected = false;
     logger.warn('(TELNET - onTimeout) ConnectionTimeout');
-    setTimeout(() => self.connect(), 5_000);
+    self.reStartConnection();
   }
 
   onClose(self: this) {
@@ -47,7 +60,7 @@ export default class Telnet extends EventEmitter {
     if (self.endTelnetConnectionManually) {
       self._connected = false;
     } else {
-      setTimeout(() => self.connect(), 5_000);
+      self.reStartConnection();
       logger.error(
         '(TELNET - onClose) This should never be called? (reconnect on close event)'
       );
@@ -59,7 +72,7 @@ export default class Telnet extends EventEmitter {
     self._connected = false;
     logger.error('(TELNET- onError) ERROR: ' + err);
     if (err.code === 'ENOBUFS') process.exit(1);
-    setTimeout(() => self.connect(), 15_000);
+    self.reStartConnection();
   }
 
   onConnect(self: this) {
@@ -68,15 +81,16 @@ export default class Telnet extends EventEmitter {
   }
 
   connect() {
+    clearTimeout(this.pendingConnectionTimeout);
     this.client
       .connect(this.params)
-      .then(() => this.connectCallback(this))
+      .then(() => this.connectCallback())
       .catch((e) => {
         //this.onTimeout(this)
         logger.error('(TELNET - connect.catch) Cannot Connect to telnet: ' + e);
       });
   }
-  connectCallback(_self: this) {
+  connectCallback() {
     logger.info('(TELNET - connectCallback) Starting Connection...');
     this._connected = true;
     this.firstPackage = -1;
