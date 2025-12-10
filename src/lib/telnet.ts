@@ -39,7 +39,7 @@ export default class Telnet extends EventEmitter {
   onTimeout(self: this) {
     self._connected = false;
     logger.warn('(TELNET - onTimeout) ConnectionTimeout');
-    self.connect();
+    setTimeout(() => self.connect(), 5_000);
   }
 
   onClose(self: this) {
@@ -47,7 +47,7 @@ export default class Telnet extends EventEmitter {
     if (self.endTelnetConnectionManually) {
       self._connected = false;
     } else {
-      self.connect();
+      setTimeout(() => self.connect(), 5_000);
       logger.error(
         '(TELNET - onClose) This should never be called? (reconnect on close event)'
       );
@@ -59,7 +59,7 @@ export default class Telnet extends EventEmitter {
     self._connected = false;
     logger.error('(TELNET- onError) ERROR: ' + err);
     if (err.code === 'ENOBUFS') process.exit(1);
-    self.connect();
+    setTimeout(() => self.connect(), 15_000);
   }
 
   onConnect(self: this) {
