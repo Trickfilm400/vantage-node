@@ -1,4 +1,4 @@
-import * as EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { IPackage } from '../interfaces/IPackage';
 
 class DataEmitter<T> extends EventEmitter {

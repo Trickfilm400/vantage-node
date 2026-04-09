@@ -6,7 +6,7 @@ import { logger } from '../core/logger';
 import { HttpServer } from '../lib/httpServer';
 
 export default class SocketIO extends DataReceiver<DataPackage> {
-  private io: Server;
+  private io?: Server;
   private readonly enabled: boolean = false;
 
   public constructor() {
@@ -33,7 +33,7 @@ export default class SocketIO extends DataReceiver<DataPackage> {
   }
 
   onData(data: DataPackage): void {
-    this.io.sockets.emit('data', {
+    this.io?.sockets.emit('data', {
       barometer: data.barometer,
       intemp: data.inTemperature,
       inhum: data.inHumidity,

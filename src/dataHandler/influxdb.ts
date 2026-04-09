@@ -2,6 +2,7 @@ import { DataReceiver } from '../lib/dataReceiver';
 import { DataPackage } from '../interfaces/IPackage';
 import { InfluxDB, Point, WriteApi } from '@influxdata/influxdb-client';
 import config from '../config';
+import { logger } from '../core/logger';
 
 export class Influxdb extends DataReceiver<DataPackage> {
   private writerClient: WriteApi | undefined;
@@ -39,6 +40,8 @@ export class Influxdb extends DataReceiver<DataPackage> {
       this.lastValues[key] = data[key];
     }
     this.writerClient.writePoints(points);
+    //write everytime into database
+    this.writerClient.close().catch(logger.error);
   }
   cleanup() {
     this.writerClient?.close();

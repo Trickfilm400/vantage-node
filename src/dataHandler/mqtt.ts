@@ -5,7 +5,7 @@ import config from '../config';
 import { MqttClient, connect } from 'mqtt';
 
 class Mqtt extends DataReceiver<DataPackage> {
-  private client: MqttClient;
+  private client?: MqttClient;
   private readonly topic: string;
   private readonly options = { retain: true };
   private readonly enabled: boolean;
@@ -35,7 +35,11 @@ class Mqtt extends DataReceiver<DataPackage> {
     let key: keyof DataPackage;
     for (key in data) {
       //console.log(data[key], key);
-      this.client.publish(this.topic + key, data[key].toString(), this.options);
+      this.client?.publish(
+        this.topic + key,
+        data[key].toString(),
+        this.options
+      );
     }
   }
 }

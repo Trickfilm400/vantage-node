@@ -1,4 +1,4 @@
-import * as convict from 'convict';
+import convict from 'convict';
 import * as path from 'path';
 import * as fs from 'fs';
 

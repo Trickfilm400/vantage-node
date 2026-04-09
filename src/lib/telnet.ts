@@ -14,7 +14,7 @@ export default class Telnet extends EventEmitter {
   private _connected = false;
   private firstPackage = -1;
   private endTelnetConnectionManually = false;
-  private pendingConnectionTimeout: NodeJS.Timeout | null;
+  private pendingConnectionTimeout?: NodeJS.Timeout | null;
   public static lastData = -1;
   constructor() {
     super();
