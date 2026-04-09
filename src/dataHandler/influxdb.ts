@@ -5,7 +5,7 @@ import config from '../config';
 import { logger } from '../core/logger';
 
 export class Influxdb extends DataReceiver<DataPackage> {
-  private writerClient: WriteApi | undefined;
+  private readonly writerClient: WriteApi | undefined;
   private lastValues: DataPackage = <DataPackage>{};
   constructor() {
     super();
@@ -41,9 +41,10 @@ export class Influxdb extends DataReceiver<DataPackage> {
     }
     this.writerClient.writePoints(points);
     //write everytime into database
-    this.writerClient.close().catch(logger.error);
+    this.writerClient.flush().catch(logger.error);
   }
   cleanup() {
+    this.writerClient?.flush().catch(logger.error);
     this.writerClient?.close();
   }
 }
