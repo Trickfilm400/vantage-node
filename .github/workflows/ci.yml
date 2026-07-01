@@ -75,6 +75,19 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+  helm:
+    needs: test
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Run chart-releaser
         uses: bitdeps/helm-oci-charts-releaser@v0.1.5
         with:
