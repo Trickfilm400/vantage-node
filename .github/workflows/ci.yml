@@ -73,3 +73,11 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Run chart-releaser
+        uses: bitdeps/helm-oci-charts-releaser@v0.1.5
+        with:
+          oci_registry: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          oci_username: ${{ github.actor }}
+          oci_password: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_gh_release: true
