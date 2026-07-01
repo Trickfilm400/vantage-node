@@ -90,8 +90,10 @@ jobs:
           fetch-depth: 0
       - id: lower-repo
         shell: pwsh
+        env:
+          INPUT: ${{ github.actor }}
         run: |
-          "::set-output name=repository::$(${{ github.actor }}.ToLowerInvariant())"
+          "::set-output name=repository::$($env:INPUT.ToLowerInvariant())"
       - name: Run chart-releaser
         uses: bitdeps/helm-oci-charts-releaser@v0.1.5
         with:
