@@ -36,9 +36,9 @@
     "@trickfilm400/eslint-shared-config": "^0.0.2",
     "@types/convict": "^6.1.6",
     "@types/mysql": "^2.15.27",
-    "@types/node": "^22.19.19",
+    "@types/node": "^22.20.0",
     "@types/ws": "^8.18.1",
-    "prettier": "^3.8.3",
+    "prettier": "^3.9.4",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^6.0.3"
